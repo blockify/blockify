@@ -1,0 +1,31 @@
+{
+  "name": "blockify",
+  "description": "",
+  "version": "0.1.0",
+  "homepage": "http://blockify.co",
+  "author": "62design",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/62design/blockify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/62design/blockify/issues"
+  },
+  "license": {
+    "type": "GNU",
+    "url": "https://github.com/62design/blockify/blob/master/LICENSE"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-sass": "~0.12.1",
+    "jshint-stylish": "~0.2.0"
+  }
+}

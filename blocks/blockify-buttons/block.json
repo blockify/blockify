@@ -1,0 +1,14 @@
+{
+  "name": "Blockify Buttons",
+  "description": "Simple buttons, great for using inside your block!",
+  "keywords": "dev",
+  "template": {
+    "@list": {
+      "@type": "Thing",
+      "@value": [
+        { "@type": "Thing", "name": "Button 1", "url": "#" },
+        { "@type": "Thing", "name": "Button 2", "url": "#" }
+      ]
+    }
+  }
+}

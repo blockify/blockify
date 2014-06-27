@@ -1,0 +1,143 @@
+.blockify-dashboard {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	min-height: 100%;
+	background: #f0f0f0;
+	z-index: 9999;
+	
+	font-family: 'Ubuntu', sans-serif;
+}
+
+	.blockify-dashboard > header {
+		position: relative;
+		height: 96px;
+		background: #fff;
+	}
+
+		.blockify-dashboard > header .branding {
+			background-color: #8e44ad;
+			text-align: center;
+			height: 100%;
+		}
+
+		.blockify-dashboard > header .branding .name {
+			color: #fff;
+			font-weight: 700;
+			font-size: 40px;
+			line-height: 75px;
+			font-style: italic;
+			letter-spacing: -0.025em;
+		}
+
+		.blockify-dashboard > header .branding .description {
+			margin-top: -16px;
+			color: #fff;
+			color: rgba(255, 255, 255, 0.85);
+			font-size: 14px;
+		}
+
+	.blockify-dashboard > section {
+		position: fixed;
+		top: 96px;
+		right: 0;
+		bottom: 0;
+		left: 0;
+	}
+
+	.blockify-dashboard > section > * {
+		height: 100%;
+	}
+
+	.blockify-dashboard > #library > aside {
+		padding: 0;
+		background: #111;
+		color: #fff;
+	}
+
+		.blockify-dashboard > #library > aside .group {
+			padding-left: 4px;
+			background-color: #2B2B2B;
+		}
+
+			.blockify-dashboard > #library > aside .group header {
+				padding: 8px 15px 10px;
+				line-height: 1;
+			}
+
+		.blockify-dashboard > #library > aside .block {
+			position: relative;
+			padding: 15px;
+			overflow: hidden;
+			background: #222;
+			border-bottom: 1px solid #2B2B2B;
+		}
+
+		.blockify-dashboard > #library > aside .block:hover {
+			background: #2B2B2B;
+		}
+
+		.blockify-dashboard > #library > aside .block.active {
+			background: #1b1b1b;
+		}
+
+			.blockify-dashboard > #library > aside .block .name,
+			.blockify-dashboard > #library > aside .block .basename {
+				display: inline-block;
+				line-height: 16px;
+			}
+
+			.blockify-dashboard > #library > aside .block .name {
+				margin-right: 4px;
+				font-size: 16px;
+				color: #fff;
+			}
+
+			.blockify-dashboard > #library > aside .block .basename {
+				font-size: 13px;
+				color: #ddd;
+			}
+
+			.blockify-dashboard > #library > aside .block .description {
+				clear: both;
+				font-size: 13px;
+				color: #bbb;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			.blockify-dashboard > #library > aside .block a {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+			}
+
+	.blockify-dashboard > #library .block-info {
+		padding: 15px 0;
+		margin: 0 auto;
+		width: 100%;
+		max-width: 1024px;
+	}
+
+		.blockify-dashboard > #library .block-info .name {
+			font-size: 30px;
+		}
+
+		.blockify-dashboard > #library .block-info .basename {
+			font-size: 20px;
+		}
+
+		.blockify-dashboard > #library .block-info .description {
+			margin-top: 4px;
+			font-size: 14px;
+			color: #333;
+		}
+
+		.blockify-dashboard > #library .block-info img {
+			margin-top: 16px;
+			box-shadow: 0 0 0 1px #fff;
+		}

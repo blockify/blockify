@@ -1,0 +1,93 @@
+@headerHeight: 64px;
+
+.header-simple {
+  background: #333;
+  height: @headerHeight;
+  line-height: @headerHeight;
+  color: #fff;
+
+  .navbar-toggle {
+    float: left;
+    padding: 10px;
+    margin-right: 10px;
+
+    .icon-bar {
+      background-color: #fff;
+      width: 28px;
+      height: 6px;
+    }
+  }
+
+  .logo, .logo:hover {
+    float: left;
+    margin-right: 16px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    max-height: @headerHeight;
+
+    img {
+      max-height: @headerHeight;
+      width: auto;
+    }
+  }
+
+  .description {
+    float: left;
+    color: #999;
+  }
+
+  nav {
+    box-shadow: none;
+
+    ul {
+      float: right;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      > li {
+        float: left;
+        margin-left: 0;
+
+        > a {
+          color: #ccc;
+          &:hover {
+            color: #fff;
+            text-decoration: none;
+          }
+          &.btn {
+            display: block;
+            margin: ((@headerHeight - 32) / 2) 0 0 0;
+            border: none;
+          }
+          &.btn-default {
+            background: #8E44AD;
+            margin-left: 15px;
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    &.in, &.collapsing {
+      position: relative;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      z-index: 9999;
+      background: #222;
+
+      ul {
+        width: 100%;
+        li {
+          margin-left: 0;
+          width: 100%;
+          > a {
+            display: block;
+            line-height: 48px;
+          }
+        }
+      }
+    }
+  }
+}

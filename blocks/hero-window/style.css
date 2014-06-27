@@ -1,0 +1,78 @@
+.hero-window {
+	background-color: #f0f0f0;
+	padding: 64px 0 0;
+	text-align: center;
+	overflow: hidden;
+}
+
+	.hero-window h1 {
+		margin: 0 0 8px;
+	}
+
+	.hero-window h4 {
+		margin: 0 0 16px;
+		opacity: 0.64;
+	}
+
+	.hero-window .blockify-buttons {
+		margin: 0 0 32px;
+	}
+
+	.hero-window .blockify-buttons .btn-default {
+		padding: 10px 24px;
+		background: #602E75;
+		border: none;
+		color: #fff;
+	}
+
+	.hero-window .window {
+		margin-top: 16px;
+		background-color: #e5e5e5;
+		border-radius: 8px 8px 0 0;
+		border: 1px solid #d4d4d4;
+		border-top-color: #dfdfdf;
+		border-bottom-width: 0;
+		overflow: hidden;
+	}
+
+	.hero-window .window:after {
+		display: block;
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		box-shadow: 0 0 32px 2px #f0f0f0;
+	}
+
+		.hero-window .window header {
+			overflow: hidden;
+			padding: 10px 10px 15px;
+		}
+
+			.hero-window .window header .circle {
+				float: left;
+				margin-right: 4px;
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				border: 1px solid rgba(0, 0, 0, 0.12);
+			}
+
+			.hero-window .window header .circle.red {
+				background-color: #ff6050;
+			}
+
+			.hero-window .window header .circle.yellow {
+				background-color: #ffbe04;
+			}
+
+			.hero-window .window header .circle.green {
+				background-color: #14cc38;
+			}
+
+		.hero-window .window .page {
+			clear: both;
+			background-color: #fff;
+			border-top: 1px solid #d4d4d4;
+		}

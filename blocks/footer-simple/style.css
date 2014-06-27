@@ -1,0 +1,38 @@
+.footer-simple {
+	background-color: #e5e5e5;
+	padding: 32px 0;
+	color: #999;
+  text-align: center;
+}
+
+.footer-simple .social-buttons {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  max-width: 720px;
+}
+
+.footer-simple .social-buttons > li {
+  display: block;
+  height: 40px;
+  overflow: hidden;
+  float: left;
+  text-align: left;
+}
+
+.footer-simple .social-buttons > li.follow-btn {
+  width: 220px;
+}
+
+.footer-simple .social-buttons > li.tweet-btn {
+  width: 100px;
+}
+
+.footer-simple .social-buttons > li.gplus-btn {
+  width: 64px;
+}
+
+.footer-simple .social-buttons > li.facebook-btn {
+  width: 148px;
+}

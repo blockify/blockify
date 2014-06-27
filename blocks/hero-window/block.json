@@ -1,0 +1,9 @@
+{
+	"name": "Browser Hero Scene",
+	"description": "Full-width hero scene block for displaying images over a flat-ui window.",
+	"type": "content",
+	"template": {
+		"@type": "Thing",
+		"image": "holder.js/100%x512"
+	}
+}

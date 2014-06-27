@@ -1,0 +1,9 @@
+{
+	"name": "Simple Footer",
+	"description": "Simple footer",
+	"keywords": "header",
+	"template": {
+		"@type": "Thing",
+		"name": "Simple Footer"
+	}
+}
