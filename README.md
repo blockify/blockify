@@ -69,5 +69,3 @@ Let’s test Blockify by loading the test block with **index.php**:
 You’ve loaded Blockify and a test block.
 
 Now dive into [Using Blocks](http://blockify.co/documentation/using-blocks/ "Using Blocks") to start the cool stuff.
-
-[Using Blocks](http://blockify.co/documentation/using-blocks/)
