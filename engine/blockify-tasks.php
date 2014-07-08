@@ -5,30 +5,36 @@
  * Licensed under GNU (https://github.com/62design/blockify/blob/master/LICENSE)
  */
 
-function renderBlockPage($basename)
-{
-    ?><!DOCTYPE html>
-        <html>
-        <head>
-            <title>Blockify Render <?php echo $basename; ?></title>
-        <?php  if ($basename == 'blockify-dashboard'): ?>
-            <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700,700italic' rel='stylesheet' type='text/css'>
-        <?php endif;  ?>
-            <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-            <?php bl_head(); ?>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-            <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/holder/2.3.1/holder.min.js"></script>
-        </head>
-        <body>
-        <?php
-            block($basename);
-            bl_footer();
-        ?>
-        </body>
+$renderBlockPage = function ($name) {
+    ?> <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Blockify Test</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <!-- CSS from the blocks -->
+        <?php blockify_css(); ?>
+      </head>
+      <body>
+        <!-- Print the block -->
+        <?php block($name); ?>
+
+        <!-- jQuery -->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- Include all compiled Bootstrap plugins -->
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <!-- Holder.js for placeholder images when developing -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/holder/2.3.1/holder.min.js"></script>
+        <!-- JavaScript from the blocks -->
+        <?php blockify_js(); ?>
+      </body>
     </html>
     <?php
-}
+};
 
 if (BLOCKIFY_DEV === true) {
     global $blockify;
@@ -42,11 +48,10 @@ if (BLOCKIFY_DEV === true) {
         array_key_exists('api/dash', $_GET) ||
         array_key_exists('dashboard', $_GET) ||
         array_key_exists('api/dashboard', $_GET):
-            renderBlockPage('blockify-dashboard');
+            $renderBlockPage('blockify-dashboard');
             die();
         case array_key_exists('api/render', $_GET):
-            renderBlockPage($_GET['api/render']);
+            $renderBlockPage($_GET['api/render']);
             die();
     }
 }
-?>

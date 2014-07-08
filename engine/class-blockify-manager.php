@@ -26,22 +26,23 @@ final class Manager
 
     private function detectResources()
     {
+        $dir = BLOCKIFY_BLOCKS_PATH;
         $built = ( file_exists(BLOCKIFY_BUILD_PATH) && is_dir(BLOCKIFY_BUILD_PATH) );
-        $dir = $built ? BLOCKIFY_BUILD_PATH : BLOCKIFY_BLOCKS_PATH;
-
         $glob_func = '\Blockify\Internal\glob_recursive';
+        $patternPrepend = '';
 
         if ($built) {
             if (BLOCKIFY_DEV) {
-                $dir .= DIRECTORY_SEPARATOR . 'dev';
+                $patternPrepend .= '*' . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR;
             } else {
+                $dir = BLOCKIFY_BUILD_PATH;
                 $glob_func = 'glob';
             }
         }
 
         $resources = array(
-            'css' => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . '*.css'),
-            'js'  => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . '*.js')
+            'css' => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . $patternPrepend . '*.css'),
+            'js'  => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . $patternPrepend . '*.js')
         );
 
         if (is_array($resources)) {
@@ -60,7 +61,7 @@ final class Manager
 
     private function executeBlockFunctions()
     {
-        $block_names = \Blockify\Internal\getBlockBasenames();
+        $block_names = \Blockify\Internal\getBlockNames();
 
         foreach ($block_names as $name) {
             $block_dir = \Blockify\Internal\getBlockPath($name);
@@ -107,7 +108,7 @@ final class Manager
         return $pop;
     }
 
-    public function getResourceData($basename, $filename, $type = null)
+    public function getResourceData($name, $filename, $type = null)
     {
         if (strpos($filename, '/') !== false || strpos($filename, '\\') !== false) {
             $data = $this->try_get_contents($filename, $type);
@@ -118,7 +119,7 @@ final class Manager
             return false;
         }
 
-        $folders = explode('/', $basename);
+        $folders = explode('/', $name);
         if (!empty($folders)) {
             $data = $this->try_get_contents($folders[0] . '/' . $filename, $type);
             if ($data != false) {
@@ -135,9 +136,9 @@ final class Manager
         return false;
     }
 
-    public function create($basename, $document = null, $options = null, $container = true)
+    public function create($name, $document = null, $options = null, $container = true)
     {
-        $block = $this->factory->build($basename, $document, $options, $container);
+        $block = $this->factory->build($name, $document, $options, $container);
         $this->blockStack->push($block);
         $this->created[] = $block;
 

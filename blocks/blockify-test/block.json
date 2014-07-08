@@ -1,7 +1,7 @@
 {
-	"name": "Blockify Test",
-	"type": "dev",
-	"struct": {
-		
+	"name": "blockify-test",
+  "version": "0.1.0",
+	"template": {
+
 	}
 }

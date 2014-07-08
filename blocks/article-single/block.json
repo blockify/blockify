@@ -1,9 +1,0 @@
-{
-	"name": "Single Article",
-	"description": "A single article for creative work.",
-	"keywords": ["content"],
-	"template": {
-		"@type": "Article",
-		"image": "holder.js/1440x300/auto"
-	}
-}

@@ -6,11 +6,15 @@ namespace Blockify;
 class Package
 {
     public $name;
-    public $basename;
+    public $version;
+    public $description;
 
-    public $screenshot;
+    public $icon;
+    public $image;
     public $options = [];
     public $template = [];
+
+    public $json = [];
 
     private $php;
     public function getPHP()
@@ -24,75 +28,97 @@ class Package
         return $this->functions;
     }
 
-    public function __construct($basename)
+    public function __construct($name)
     {
-        if (is_array($basename)) {
-            $basename = implode('-', $basename);
+        if (is_array($name)) {
+            $name = implode('-', $name);
         }
-        if (!is_string($basename)) {
-            throw new \Exception('Invalid Block Basename');
+        if (!is_string($name)) {
+            throw new \Exception('Invalid block name');
         }
 
-        $this->basename = $basename;
+        $this->name = $name;
+        $this->version = '0.0.0';
 
-        $path = \Blockify\Internal\getBlockPath($basename);
+        $path = \Blockify\Internal\getBlockPath($name);
 
         if (!file_exists($path)) {
             throw new \Exception("Block path not found: '{$path}'");
         }
 
         $files = [
-            'php' => "{$basename}.php|index.php",
-            'json' => "{$basename}.json|block.json",
+            'php' => "{$name}.php|index.php",
+            'json' => "block.json",
             'functions' => 'functions.php',
-            'screenshot' => 'screenshot.png'
+            'icon' => 'icon.png',
+            'image' => 'image.png'
         ];
 
         foreach ($files as $key => &$value) {
-            foreach (explode('|', $value) as $file) {
+            foreach (explode('|', $value) as $filename) {
 
-                // Absolute file path for each possibility
-                $file = $path . DIRECTORY_SEPARATOR . $file;
-                if (file_exists($file)) {
+                $file = $path . DIRECTORY_SEPARATOR . $filename;
 
-                    // Our file exists so let's handle based on key
-                    switch ($key) {
-                        case 'json':
-                            $value = json_decode(file_get_contents($file), true);
-                            if ($value == null) {
-                                throw new \Exception("Invalid block JSON file: '$file'");
-                                return false;
-                            }
-                            break;
-                        default:
-                            $value = $file;
-                            break;
+                if ($key == 'json') {
+                    if (!is_array($value)) {
+                        $value = [];
                     }
 
-                    // Don't try other possibilities for this file key
-                    break;
+                    $dotFile = str_replace($filename, '.' . $filename, $file);
 
+                    foreach ([$dotFile, $file] as $jsonFile) {
+                        if (file_exists($jsonFile)) {
+                            $decoded = json_decode(file_get_contents($jsonFile), true);
+                            if ($decoded == null) {
+                                throw new \Exception("Invalid block JSON file: '$jsonFile'");
+                                return false;
+                            }
+                            $value = array_replace_recursive($value, $decoded);
+                        }
+                    }
+
+                    if (empty($value)) {
+                        throw new \Exception("No valid block JSON founde: '$file'");
+                        return false;
+                    }
                 } else {
-                    // File does not exist
-                    $value = null;
-                }
 
+                    if (file_exists($file)) {
+                        $value = $file;
+                        break;
+                    } else {
+                        $value = null;
+                    }
+
+                }
             }
         }
 
         if ($files['json'] == null) {
-            throw new \Exception("You are missing a JSON file for your block: '{$basename}.json' or 'block.json' in '$block_dir'");
+            throw new \Exception("You are missing a JSON file for your block: 'block.json' in '$path'");
+        }
+
+        if (empty($files['json'])) {
+            throw new \Exception("You are missing a JSON data for your block: 'block.json' in '$path'");
         }
 
         if ($files['php'] == null) {
-            throw new \Exception("You are missing a PHP file for your block: '{$name}.php' or 'index.php' in '$block_dir'");
+            throw new \Exception("You are missing a PHP file for your block: '{$name}.php' or 'index.php' in '$path'");
         }
 
         // We have a valid block
 
         $this->php = $files['php'];
         $this->functions = $files['functions'];
-        $this->screenshot = $files['screenshot'];
+        $this->icon = $files['icon'];
+        $this->image = $files['image'];
+        $this->json = $files['json'];
+        if(array_key_exists('version', $this->json)) {
+            $this->version = $this->json['version'];
+        }
+        if(array_key_exists('description', $this->json)) {
+            $this->description = $this->json['description'];
+        }
 
         if (array_key_exists('template', $files['json']) && is_array($files['json']['template'])) {
             $this->template = $files['json']['template'];

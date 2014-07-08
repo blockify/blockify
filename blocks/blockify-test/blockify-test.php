@@ -1,7 +1,7 @@
-<link href='//fonts.googleapis.com/css?family=Ubuntu:400,400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,400,300' rel='stylesheet' type='text/css'>
 <div class="blockify-test">
 	<h1>It's Alive!</h1>
-	<p>If you haven't used blockify before, check out the <a href="#">docs</a>!</p>
+	<p>If you haven't used blockify before, check out the <a href="http://blockify.co/documentation/getting-started/" target="_blank">docs</a>!</p>
 	<h1>Developer Info</h1>
 	<ul>
 		<li>Blockify Version: <?= BLOCKIFY_VERSION ?></li>

@@ -19,8 +19,8 @@ class Block
 
     public function open($tagName = 'section', $attributes = null)
     {
-        // Add block basename to class
-        $attributes = array_merge_recursive((array)$attributes, ['class' => [$this->package->basename]]);
+        // Add block name to class
+        $attributes = array_merge_recursive((array)$attributes, ['class' => [$this->package->name]]);
 
         /*
         // Add developer attributes if in dev mode and using the current block

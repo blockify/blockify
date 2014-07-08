@@ -7,139 +7,113 @@
 module.exports = function(grunt) {
   'use strict';
 
-  var path = require('path');
-  var source = {
-    css: '*/{,**/}*.css',
-    less: '*/{,**/}*.less',
-    sass: '*/{,**/}*.scss',
-    js: '*/{,**/}*.js',
-    coffee: '*/{,**/}*.coffee'
-  };
+  var BLOCKS_DIR = 'blocks/';
 
-  // Project configuration.
-  grunt.initConfig({
+  var blocks = grunt.file.expand({cwd: BLOCKS_DIR}, '*/');
+
+  var config = {
     pkg: grunt.file.readJSON('package.json'),
     clean: {
       build: {
         src: 'build/'
-      }
-    },
-    copy: {
-      css: {
-        expand: true,
-        cwd: 'blocks',
-        src: source.css,
-        dest: 'build/dev'
       },
-      js: {
+      blocks: {
         expand: true,
-        cwd: 'blocks',
-        src: source.js,
-        dest: 'build/dev'
+        cwd: BLOCKS_DIR,
+        src: '*/build/'
       }
     },
     jshint: {
       options: {
         reporter: require('jshint-stylish'),
       },
-      all: 'blocks/{,**/}*.js'
+      all: BLOCKS_DIR + '*/{,**/}*.js'
     },
-    coffee: {
-      development: {
-        expand: true,
-        cwd: 'blocks',
-        src: source.coffee,
-        dest: 'build/dev',
-        ext: '.coffee.js'
+    less: { },
+    sass: { },
+    coffee: { },
+    cssmin: {
+      production: {
+        files: [{
+          src: BLOCKS_DIR + '*/*.css',
+          dest: 'build/main.min.css'
+        }]
       }
     },
     uglify: {
       production: {
         files: [{
-          src: 'build/dev/{,**/}*.js',
+          src: BLOCKS_DIR + '*/*.js',
           dest: 'build/main.min.js'
-        }]
-      }
-    },
-    less: {
-      development: {
-        options: {
-          paths: ["build/dev"]
-        },
-        files: [{
-          expand: true,
-          cwd: 'blocks',
-          src: source.less,
-          dest: 'build/dev',
-          ext: '.less.css'
-        }]
-      }
-    },
-    sass: {
-      development: {
-        options: {
-          includePaths: [ 'build/dev' ]
-        },
-        files: [{
-          expand: true,
-          cwd: 'blocks',
-          src: source.sass,
-          dest: 'build/dev',
-          ext: '.sass.css'
-        }]
-      }
-    },
-    cssmin: {
-      production: {
-        files: [{
-          src: 'build/dev/{,**/}*.css',
-          dest: 'build/main.min.css'
         }]
       }
     },
     watch: {
       options: {
         livereload: true,
-        cwd: 'blocks'
+        cwd: BLOCKS_DIR
       },
       livereload: {
         files: '*/{,**/}*.{php,json}'
       },
       css: {
-        files: source.css,
+        files: ['*/{,**/}*.css', '!*/build/*'],
         tasks: ['build']
       },
       less: {
-        files: source.less,
+        files: ['*/{,**/}*.less', '!*/build/*'],
         tasks: ['build']
       },
       sass: {
-        files: source.sass,
+        files: ['*/{,**/}*.scss', '!*/build/*'],
         tasks: ['build']
       },
       js: {
-        files: source.js,
+        files: ['*/{,**/}*.js', '!*/build/*'],
         tasks: ['build']
       },
       coffee: {
-        files: source.coffee,
+        files: ['*/{,**/}*.coffee', '!*/build/*'],
         tasks: ['build']
       }
-    },
-    filerev: {
-      options: {
-        encoding: 'utf8',
-        algorithm: 'md5',
-        length: 8
-      },
-      build: {
-        src: [
-          'build/*.min.{js,css}',
-          'build/dev/*/{,**/}*.{js,css}'
-        ]
-      }
     }
+  };
+
+  blocks.forEach(function(blockDir, index) {
+    config.less[blockDir] = {
+      files: [{
+        expand: true,
+        flatten: true,
+        cwd: BLOCKS_DIR + blockDir,
+        src: '{,**/}*.less',
+        dest: BLOCKS_DIR + blockDir + 'build/',
+        ext: '.less.css'
+      }]
+    };
+    config.sass[blockDir] = {-
+      files: [{
+        expand: true,
+        flatten: true,
+        cwd: BLOCKS_DIR + blockDir,
+        src: '{,**/}*.scss',
+        dest: BLOCKS_DIR + blockDir + 'build/',
+        ext: '.scss.css'
+      }]
+    };
+    config.coffee[blockDir] = {
+      expand: true,
+      flatten: true,
+      cwd: BLOCKS_DIR + blockDir,
+      src: '{,**/}*.coffee',
+      dest: BLOCKS_DIR + blockDir + 'build/',
+      ext: '.coffee.js'
+    };
+    //TODO:
+    //  Add specific block rebuilding into watch :) - jmswrnr
+    //  Allow relative resources in block folders other than js/css
   });
+
+  grunt.initConfig(config);
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -151,7 +125,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('build', ['clean', 'jshint', 'copy', 'less', 'sass', 'cssmin', 'coffee', 'uglify']);
+  grunt.registerTask('build', ['clean', 'jshint', 'less', 'sass', 'coffee', 'cssmin', 'uglify']);
   grunt.registerTask('default', ['build']);
   grunt.registerTask('dev', ['build', 'watch']);
 

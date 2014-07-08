@@ -1,107 +1,50 @@
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,400,300' rel='stylesheet' type='text/css'>
 <?php
 
 global $blockify;
-$blocks = $blockify->factory->getAllPackages();
-echo 'needs updating';
-return;
 
-$blockTypeColors = array(
-    'dev' => '#8e44ad',
-    'pricing-table' => '#27ae60',
-    'content' => '#2c3e50',
-    'header' => '#3498db',
-    'footer' => '#2980b9',
-    'slider' => '#d35400'
-);
-$blockTypes = array(
-    'misc' => array()
-);
-foreach ($blocks as $block) {
-    $type = $block['json']['type'];
-    if ($type == null) {
-        $blockTypes['misc'][] = $block;
-    } else {
-        if (!array_key_exists($type, $blockTypes)) {
-            $blockTypes[$type] = array();
-        }
-        $blockTypes[$type][] = $block;
-    }
+// Force disable container
+$block->container = false;
+
+$blocks = $blockify->factory->getAllPackages();
+$grid = new BlockifyGridIterator($blocks, 1);
+
+$block->open();
+?>
+<header>
+    <div class="container">
+        Local Blocks
+    </div>
+</header>
+<main class="container">
+<?php
+
+foreach ($blocks as $current) {
+    $private = array_key_exists('private', $current->json)
+        && $current->json['private'] == true;
+    ?>
+    <article class="block-entry">
+        <figure>
+            <?php
+                if (!is_null($current->icon)) {
+                    $icon = str_replace('\\', '/', str_replace(BLOCKIFY_PATH, BLOCKIFY_URL, $current->icon));
+                    echo "<img src=\"$icon\">";
+                }
+            ?>
+        </figure>
+        <div class="content">
+            <h1>
+                <?= $current->name; ?>
+                <span><?= $current->version; ?></span>
+                <?php if($private) echo '<span class="private">Private</span>'; ?>
+            </h1>
+            <p><?= $current->description ; ?></p>
+        </div>
+    </article>
+    <?php
 }
 
 ?>
-<section class="blockify-dashboard">
-
-    <header>
-        <div class="branding col-sm-3">
-            <div class="name">Blockify</div>
-            <div class="description">Version <?= BLOCKIFY_VERSION ?></div>
-        </div>
-    </header>
-
-    <section id="library">
-        <aside class="col-sm-3">
+</main>
 <?php
-            foreach ($blockTypes as $groupName => $group) {
-?>
-            <div class="group" style="background: <?= $blockTypeColors[$groupName]; ?>">
-                <!--<header>
-                    <?= $groupName; ?>
-                </header>-->
-<?php
-
-                foreach( $group as $block ) {
-?>
-                    <div class="block">
-                        <div class="name"><?= $block['json']['name']; ?></div>
-                        <div class="basename"><?= $block['basename']; ?></div>
-                        <div class="description"><?= $block['description']; ?></div>
-                        <a href="#block-<?= $block['basename']; ?>"></a>
-                    </div>
-<?php
-                }
-?>
-                </div>
-<?php
-            }
-?>
-        </aside>
-        <div class="content col-md-9">
-            <div class="block-tabs">
-<?php
-                foreach( $blocks as $block ) {
-?>
-                    <article class="block-info" id="block-<?= $block['basename']; ?>">
-                        <div class="name"><?= $block['json']['name']; ?></div>
-                        <div class="basename"><?= $block['basename']; ?></div>
-                        <div class="description"><?= $block['description']; ?></div>
-<?php
-                        if( $block['screenshot'] != false ) :
-                            $url = str_replace('\\', '/', str_replace(BLOCKIFY_PATH, BLOCKIFY_URL, $block['screenshot']));
-?>
-                            <img src="<?= $url; ?>" alt="<?= $block['json']['name']; ?>" />
-<?php
-                        endif;
-?>
-                    </article>
-<?php
-                }
-?>
-            </div>
-        </div>
-        <script type="text/javascript">
-            (function($) {
-                $('#library aside .block a').click(function(event) {
-                    $('#library > aside .block').removeClass('active');
-                    $(this).closest('.block').addClass('active')
-                    $('#library .block-tabs .block-info').addClass('hidden');
-                    $($(this).attr('href')).removeClass('hidden');
-                }).first().trigger('click');
-                $('body,html').css({
-                    overflow: 'hidden',
-                    height: '100%',
-                    'min-height': '512px'
-                });
-            })(jQuery);
-        </script>
-    </section>
-</section>
+$block->close();

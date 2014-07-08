@@ -6,28 +6,28 @@ class BlockFactory
 {
     private $blockPackages = [];
 
-    public function getPackage($basename)
+    public function getPackage($name)
     {
-        if (array_key_exists($basename, $this->blockPackages)) {
-            return $this->blockPackages[$basename];
+        if (array_key_exists($name, $this->blockPackages)) {
+            return $this->blockPackages[$name];
         } else {
-            $package = new Package($basename);
-            $this->blockPackages[$basename] = &$package;
+            $package = new Package($name);
+            $this->blockPackages[$name] = &$package;
             return $package;
         }
     }
 
-    public function build($basename, $document, $options, $container)
+    public function build($name, $document, $options, $container)
     {
-        return $this->getPackage($basename)->spawn($document, $options, $container);
+        return $this->getPackage($name)->spawn($document, $options, $container);
     }
 
     public function getAllPackages()
     {
         $packages = [];
-        $blockNames = \Blockify\Internal\getBlockBasenames();
-        foreach ($blockNames as $basename) {
-            if (($package = $this->getPackage($basename)) != false) {
+        $blockNames = \Blockify\Internal\getBlocknames();
+        foreach ($blockNames as $name) {
+            if (($package = $this->getPackage($name)) != false) {
                 $packages[] = $package;
             }
         }

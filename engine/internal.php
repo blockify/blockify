@@ -169,12 +169,12 @@ function glob_recursive( $pattern, $flags = 0 )
     return $files;
 }
 
-function getBlockPath($basename, $directory = \BLOCKIFY_BLOCKS_PATH)
+function getBlockPath($name, $directory = \BLOCKIFY_BLOCKS_PATH)
 {
-    return $directory . DIRECTORY_SEPARATOR . $basename;
+    return $directory . DIRECTORY_SEPARATOR . $name;
 }
 
-function getBlockBasenames()
+function getBlockNames()
 {
     if (!is_dir(BLOCKIFY_BLOCKS_PATH)) {
         return null;
