@@ -90,7 +90,7 @@ module.exports = function(grunt) {
         ext: '.less.css'
       }]
     };
-    config.sass[blockDir] = {-
+    config.sass[blockDir] = {
       files: [{
         expand: true,
         flatten: true,
