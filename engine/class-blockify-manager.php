@@ -29,20 +29,15 @@ final class Manager
         $dir = BLOCKIFY_BLOCKS_PATH;
         $built = ( file_exists(BLOCKIFY_BUILD_PATH) && is_dir(BLOCKIFY_BUILD_PATH) );
         $glob_func = '\Blockify\Internal\glob_recursive';
-        $patternPrepend = '';
 
-        if ($built) {
-            if (BLOCKIFY_DEV) {
-                $patternPrepend .= '*' . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR;
-            } else {
-                $dir = BLOCKIFY_BUILD_PATH;
-                $glob_func = 'glob';
-            }
+        if ($built && !BLOCKIFY_DEV) {
+            $dir = BLOCKIFY_BUILD_PATH;
+            $glob_func = 'glob';
         }
 
         $resources = array(
-            'css' => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . $patternPrepend . '*.css'),
-            'js'  => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . $patternPrepend . '*.js')
+            'css' => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . '*.css'),
+            'js'  => call_user_func($glob_func, $dir . DIRECTORY_SEPARATOR . '*.js')
         );
 
         if (is_array($resources)) {
