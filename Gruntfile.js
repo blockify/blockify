@@ -35,7 +35,7 @@ module.exports = function(grunt) {
     cssmin: {
       production: {
         files: [{
-          src: BLOCKS_DIR + '*/*.css',
+          src: BLOCKS_DIR + '*/{,build/}*.css',
           dest: 'build/main.min.css'
         }]
       }
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
     uglify: {
       production: {
         files: [{
-          src: BLOCKS_DIR + '*/*.js',
+          src: BLOCKS_DIR + '*/{,build/}*.js',
           dest: 'build/main.min.js'
         }]
       }
