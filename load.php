@@ -5,7 +5,7 @@
  * Licensed under GNU (https://github.com/62design/blockify/blob/master/LICENSE)
  */
 
-define('BLOCKIFY_VERSION', 'v0.1.1 beta');
+define('BLOCKIFY_VERSION', 'v0.1.2 beta');
 
 // Define Blockify defaults
 function bl_define_default($key, $value)

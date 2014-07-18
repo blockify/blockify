@@ -87,8 +87,8 @@ class Item implements \ArrayAccess
 
     public function tag($tagName, $keys, $attributes = null)
     {
-
-        $callback = function ($itemprop, $content) use ($tagName, $attributes) {
+        $self = &$this;
+        $callback = function ($itemprop, $content) use ($tagName, $attributes, $self) {
 
             // Default to empty array if no attributes provided
             if (is_null($attributes) || !is_array($attributes)) {
@@ -108,7 +108,7 @@ class Item implements \ArrayAccess
                     $shortTag = true;
                     break;
                 case 'a':
-                    $attributes['href'] = $bl_document['url'];
+                    $attributes['href'] = $self['url'];
                     break;
             }
 
