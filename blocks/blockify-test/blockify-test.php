@@ -12,6 +12,6 @@
 			<?= $read_perms ? '' : '<span>Cannot read directory, Please fix <a href="#">permissions</a>!</span>' ?>
 		</li>
 	</ul>
-	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53ada06b480c4fb7"></script>
+	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53ce864668a7e974"></script>
 	<div class="addthis_sharing_toolbox"  data-url="http://blockify.co" data-title="I just installed Blockify, the faster way to develop websites. #blockify"></div>
 </div>
