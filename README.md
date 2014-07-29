@@ -32,7 +32,7 @@ Blockify requires stable PHP versions &gt;= 5.3
 
 ### Manually
 
-Download and extract the [Latest Blockify Build](https://github.com/blockify/blockify/archive/master.zip) into your DocumentRoot, your&nbsp;directory structure might&nbsp;look like this:
+Download and extract the [Latest Blockify Build](https://github.com/blockify/blockify/releases/download/0.1.2/blockify-0.1.2.zip) into your DocumentRoot, your&nbsp;directory structure might&nbsp;look like this:
 
 ```DocumentRoot/
 ├── blockify/
