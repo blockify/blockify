@@ -35,7 +35,7 @@ function bwp_get_the_content() {
     return apply_filters('the_content', get_the_content());
 }
 
-function bwp_get_the_post_thumbnail() {
+function bwp_get_the_post_thumbnail_src() {
     return wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), '')[0];
 }
 
