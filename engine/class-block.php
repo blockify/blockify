@@ -4,49 +4,140 @@ namespace Blockify;
 
 class Block
 {
-    public $document;
-    public $options;
-    public $container;
-    public $package;
+    private $children;
 
-    public function __construct($package, $document, $options, $container)
+    public $package;
+    private $model;
+
+    public function __construct($name, $model = null)
     {
-        $this->document = $document;
-        $this->options = $options;
-        $this->container = $container;
-        $this->package = $package;
+        global $blockify;
+
+        // Find the package for the block
+        $this->package = $blockify->getPackage($name);
+
+        // Init child stack
+        $this->children = new \SplDoublyLinkedList();
+
+        // Set model to cleaned input
+        $this->model = ModelHelper::clean($model, $this->package->defaults);
     }
 
-    public function open($tagName = 'section', $attributes = null)
+    private function classCall($method)
+    {
+        if (method_exists($this->class, $method)) {
+            $this->class->{$method}($this);
+        }
+    }
+
+    public function appendChild($child)
+    {
+        $this->children->push($child);
+    }
+
+    public function __toString()
+    {
+        global $blockify;
+        return $blockify->buildBlock($this);
+    }
+
+    public function __get($name)
+    {
+        switch($name) {
+            case 'model':
+                return $this->model;
+                break;
+            default:
+                $trace = debug_backtrace();
+                trigger_error(
+                    'Undefined property via __get(): ' . $name .
+                    ' in ' . $trace[0]['file'] .
+                    ' on line ' . $trace[0]['line'],
+                    E_USER_NOTICE
+                );
+                return null;
+                break;
+        }
+
+    }
+
+    public function __set($name, $value)
+    {
+        switch ($name) {
+            case 'model':
+                $this->model = ModelHelper::clean($value);
+                break;
+        }
+    }
+
+    public function content()
+    {
+        global $blockify;
+
+        $contents = '';
+
+        $this->children->rewind();
+        while ($this->children->valid()) {
+
+            $contents .= $blockify->buildBlock($this->children->current());
+
+            $this->children->next();
+        }
+
+        echo $contents;
+    }
+
+    public function openTag($tagName = 'section', $attributes = null)
     {
         // Add block name to class
-        $attributes = array_merge_recursive((array)$attributes, ['class' => [$this->package->name]]);
-
-        /*
-        // Add developer attributes if in dev mode and using the current block
-        if (BLOCKIFY_DEV) {
-            $attributes['class'][] = 'blockify-dev-block';
-            $attributes['data-block'] = json_encode( $target, JSON_HEX_APOS );
-        }
-        */
+        $attributes = array_merge_recursive(
+            (array)$attributes,
+            ['class' => [$this->package->name]]
+        );
 
         // Open Item tag
-        $this->document->open($tagName, $attributes);
-
-        // Echo container if required
-        if ($this->container === true) {
-            echo "<div class=\"container\">\n";
-        }
+        $this->model->open($tagName, $attributes);
     }
 
-    public function close()
+    public function closeTag()
     {
-        // End container if required
-        if ($this->container === true) {
-            echo "</div>\n";
-        }
-
         // Close Item tag
-        $this->document->close();
+        $this->model->close();
     }
 }
+
+/*
+
+CHANGED:
+
+Removed Options
+Removed 'template' to 'defaults'
+Removed Placeholder data
+Removed non-essential engine code (Move to external blocks)
+Removed phantom js code
+Removed schema cleaning
+Removed unused internal functions
+Removed unused constants
+Clean Block->attr function to no longer require Schema & extract global data attributes from item data
+Refactored Block Class for direct use
+Attribute ordering only happens while in DEV mode
+Fixed code in README.md
+Removed blockify-button, to be remade as core-button-group and core-buttons
+New 'Element' Class
+New Block: core-button
+
+TODO:
+
+Make core-section
+Make core-button-group
+Make core-tabs
+Make core-tab
+Make core-pages
+Make core-header
+Make core-footer
+Make core-grid
+
+Update block manager and remove the requirement of 'template'
+Update docs, annotate videos.
+
+*/

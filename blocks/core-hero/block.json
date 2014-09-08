@@ -1,0 +1,7 @@
+{
+  "name": "core-hero",
+  "description": "",
+  "defaults": {
+    "name": "Flat Hero"
+  }
+}

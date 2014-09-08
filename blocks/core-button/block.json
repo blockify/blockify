@@ -1,0 +1,9 @@
+{
+  "name": "core-button",
+  "description": "",
+  "defaults": {
+    "class": "btn-default",
+    "href": "#",
+    "name": "Button Text"
+  }
+}

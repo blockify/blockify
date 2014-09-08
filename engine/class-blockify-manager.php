@@ -5,21 +5,16 @@ namespace Blockify;
 final class Manager
 {
     protected $blockStack;
-    protected $tagStack;
-    public $factory;
+    private $blockPackages = [];
     public $resources = [
         'css' => [],
         'js'  => []
     ];
 
-    public $schema;
-
     public function __construct()
     {
-        $this->schema = \Blockify\Internal\getEngineDataJSON('schema');
-        $this->blockStack = new \SplStack();
-        $this->tagStack = new \SplStack();
-        $this->factory = new BlockFactory();
+        $this->blockStack = new \SplDoublyLinkedList();
+
         $this->detectResources();
         $this->executeBlockFunctions();
     }
@@ -87,20 +82,38 @@ final class Manager
         $GLOBALS['block'] = $block;
     }
 
-    public function currentEval()
+    public function buildBlock($obj)
     {
-        $block = $this->blockStack->top();
+        switch (get_class($obj)) {
+            case 'Blockify\Block':
+                $block =& $obj;
 
-        // Setup globals + execute current block
-        $this->updateGlobals();
-        require $block->package->getPHP();
+                $this->blockStack->push($block);
 
-        // Pop block from stack and update globals
-        $pop = $this->blockStack->pop();
-        $this->updateGlobals();
+                // Setup Globals
+                $this->updateGlobals();
 
-        // Return the executed block
-        return $pop;
+                // Start Buffer
+                // TODO: Implement block caching
+                ob_start();
+
+                // Execute Block
+                require $block->package->getPHP();
+
+                // Store buffer contents
+                $contents = ob_get_clean();
+
+                // Cleanup, pop the stack and update globals
+                $pop = $this->blockStack->pop();
+                $this->updateGlobals();
+
+                // Return contents
+                return $contents;
+            case 'Blockify\Element':
+                return (string) $obj;
+        }
+
+        return false;
     }
 
     public function getResourceData($name, $filename, $type = null)
@@ -131,13 +144,27 @@ final class Manager
         return false;
     }
 
-    public function create($name, $document = null, $options = null, $container = true)
+    public function getPackage($name)
     {
-        $block = $this->factory->build($name, $document, $options, $container);
-        $this->blockStack->push($block);
-        $this->created[] = $block;
+        if (array_key_exists($name, $this->blockPackages)) {
+            return $this->blockPackages[$name];
+        } else {
+            $package = new Package($name);
+            $this->blockPackages[$name] = &$package;
+            return $package;
+        }
+    }
 
-        return $block;
+    public function getAllPackages()
+    {
+        $packages = [];
+        $blockNames = \Blockify\Internal\getBlocknames();
+        foreach ($blockNames as $name) {
+            if (($package = $this->getPackage($name)) != false) {
+                $packages[] = $package;
+            }
+        }
+        return $packages;
     }
 
 }

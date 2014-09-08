@@ -39,7 +39,7 @@ Download and extract the [Latest Blockify Build](https://github.com/blockify/blo
 │   └── ...
 ├── images/
 │   ├── logo.png
-│   └── logo@<span class="hljs-number">2</span>x.png
+│   └── logo@2x.png
 └── index.php
 ```
 
