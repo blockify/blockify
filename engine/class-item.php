@@ -109,9 +109,28 @@ class Item implements \ArrayAccess
         $attributes = $this->attr($attributes);
 
         // Echo start tag
-        echo "<{$tagName}{$attributes}>\n";
-
-        $this->tagName = $tagName;
+        switch (true) {
+            case ($tagName == 'area'):
+            case ($tagName == 'base'):
+            case ($tagName == 'br'):
+            case ($tagName == 'col'):
+            case ($tagName == 'embed'):
+            case ($tagName == 'img'):
+            case ($tagName == 'input'):
+            case ($tagName == 'keygen'):
+            case ($tagName == 'link'):
+            case ($tagName == 'meta'):
+            case ($tagName == 'param'):
+            case ($tagName == 'source'):
+            case ($tagName == 'track'):
+            case ($tagName == 'wbr'):
+                echo "<{$tagName}{$attributes} />\n";
+                break;
+            default:
+                echo "<{$tagName}{$attributes}>\n";
+                $this->tagName = $tagName;
+                break;
+        }
     }
 
     public function close()
