@@ -1,0 +1,7 @@
+{
+  "name": "core-icon",
+  "description": "",
+  "defaults": {
+    "icon": "social:gplus"
+  }
+}

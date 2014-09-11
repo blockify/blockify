@@ -1,0 +1,8 @@
+{
+  "name": "core-item",
+  "description": "",
+  "defaults": {
+    "name": "Core Item",
+    "url": "#"
+  }
+}

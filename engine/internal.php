@@ -45,7 +45,8 @@ $attributeDataGlobals = [
     "/^id$/",
     "/^data-/",
     "/^aria-/", "/^role$/",
-    "/^itemid$/", "/^itemprop$/", "/^itemref$/", "/^itemscope$/", "/^itemtype$/"
+    "/^itemid$/", "/^itemprop$/", "/^itemref$/", "/^itemscope$/", "/^itemtype$/",
+    "/^style$/"
 ];
 
 function orderAttributes($attributes)
@@ -101,7 +102,7 @@ function stringifyAttributes($attributes)
                     $return .= " {$key}";
                 }
                 break;
-            case empty($value):
+            case is_null($value):
                 break;
             default:
                 $value = stringify_space_seperated($value);

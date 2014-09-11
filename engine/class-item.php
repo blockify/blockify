@@ -93,6 +93,32 @@ class Item implements \ArrayAccess
         return new \Blockify\Element($tagName, $this->data[$key], $attributes);
     }
 
+    public function createVoidElement($tagName, $key, $attributes = [], $schema = false)
+    {
+        if ($schema) {
+            $attributes['itemprop'] = $key;
+        }
+        switch ($tagName) {
+            case 'area':
+            case 'link':
+                $attributes['href'] = $this->data[$key];
+                break;
+            case 'base':
+                $attributes['target'] = $this->data[$key];
+                break;
+            case 'img':
+            case 'embed':
+            case 'source':
+            case 'track':
+                $attributes['src'] = $this->data[$key];
+                break;
+            default:
+                $attributes['data-' . $key] = $this->data[$key];
+                break;
+        }
+        return new \Blockify\VoidElement($tagName, $attributes);
+    }
+
     public function attr($attributes = null)
     {
         $attributes = array_merge_recursive(

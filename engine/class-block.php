@@ -4,10 +4,10 @@ namespace Blockify;
 
 class Block
 {
-    private $children;
-
     public $package;
+    public $children;
     private $model;
+    private $uri;
 
     public function __construct($name, $model = null)
     {
@@ -23,16 +23,16 @@ class Block
         $this->model = ModelHelper::clean($model, $this->package->defaults);
     }
 
-    private function classCall($method)
-    {
-        if (method_exists($this->class, $method)) {
-            $this->class->{$method}($this);
-        }
-    }
-
     public function appendChild($child)
     {
         $this->children->push($child);
+        return $this;
+    }
+
+    public function appendTo($parent)
+    {
+        $parent->children->push($this);
+        return $this;
     }
 
     public function __toString()
@@ -46,6 +46,9 @@ class Block
         switch($name) {
             case 'model':
                 return $this->model;
+                break;
+            case 'uri':
+                return $this->package->uri;
                 break;
             default:
                 $trace = debug_backtrace();
@@ -84,7 +87,7 @@ class Block
             $this->children->next();
         }
 
-        echo $contents;
+        return $contents;
     }
 
     public function openTag($tagName = 'section', $attributes = null)

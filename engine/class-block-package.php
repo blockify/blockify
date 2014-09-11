@@ -8,6 +8,8 @@ class Package
     public $name;
     public $version;
     public $description;
+    public $path;
+    private $uri;
 
     public $icon;
     public $image;
@@ -40,10 +42,10 @@ class Package
         $this->name = $name;
         $this->version = '0.0.0';
 
-        $path = \Blockify\Internal\getBlockPath($name);
+        $this->path = \Blockify\Internal\getBlockPath($name);
 
-        if (!file_exists($path)) {
-            trigger_error("Block path not found: '{$path}'", E_USER_ERROR);
+        if (!file_exists($this->path)) {
+            trigger_error("Block path not found: '{$this->path}'", E_USER_ERROR);
         }
 
         $files = [
@@ -57,7 +59,7 @@ class Package
         foreach ($files as $key => &$value) {
             foreach (explode('|', $value) as $filename) {
 
-                $file = $path . DIRECTORY_SEPARATOR . $filename;
+                $file = $this->path . DIRECTORY_SEPARATOR . $filename;
 
                 if ($key == 'json') {
                     if (!is_array($value)) {
@@ -95,15 +97,15 @@ class Package
         }
 
         if ($files['json'] == null) {
-            trigger_error("You are missing a JSON file for your block: 'block.json' in '$path'", E_USER_ERROR);
+            trigger_error("You are missing a JSON file for your block: 'block.json' in '$this->path'", E_USER_ERROR);
         }
 
         if (empty($files['json'])) {
-            trigger_error("You are missing a JSON data for your block: 'block.json' in '$path'", E_USER_ERROR);
+            trigger_error("You are missing a JSON data for your block: 'block.json' in '$this->path'", E_USER_ERROR);
         }
 
         if ($files['php'] == null) {
-            trigger_error("You are missing a PHP file for your block: '{$name}.php' or 'index.php' in '$path'", E_USER_ERROR);
+            trigger_error("You are missing a PHP file for your block: '{$name}.php' or 'index.php' in '$this->path'", E_USER_ERROR);
         }
 
         // We have a valid block
@@ -122,5 +124,37 @@ class Package
         if (array_key_exists('defaults', $this->json) && is_array($this->json['defaults'])) {
             $this->defaults = $this->json['defaults'];
         }
+    }
+
+    public function __get($name)
+    {
+        switch($name) {
+            case 'uri':
+                if (empty($this->uri)) {
+                    $this->uri = BLOCKIFY_URL . '/' .
+                        str_replace(
+                            '\\',
+                            '/',
+                            str_replace(
+                                BLOCKIFY_PATH . DIRECTORY_SEPARATOR,
+                                '',
+                                $this->path
+                            )
+                        );
+                }
+                return $this->uri;
+                break;
+            default:
+                $trace = debug_backtrace();
+                trigger_error(
+                    'Undefined property via __get(): ' . $name .
+                    ' in ' . $trace[0]['file'] .
+                    ' on line ' . $trace[0]['line'],
+                    E_USER_NOTICE
+                );
+                return null;
+                break;
+        }
+
     }
 }

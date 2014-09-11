@@ -1,18 +1,16 @@
 <?php
 
-$block->openTag();
+$block->openTag('section', [
+  'class' => 'core-section'
+]);
 
-?>
-<div class="container">
-<?php
+echo '<div class="container">';
 
 echo $block->model->createElement('h1', 'name');
 echo $block->model->createElement('p', 'description');
 
-$block->content();
+echo $block->content();
 
-?>
-</div>
-<?php
+echo '</div>';
 
 $block->closeTag();

@@ -84,6 +84,17 @@ final class Manager
 
     public function buildBlock($obj)
     {
+        switch (gettype($obj)) {
+            case 'string':
+                return $obj;
+            case 'object':
+                return $this->buildBlockObject($obj);
+        }
+        return false;
+    }
+
+    private function buildBlockObject($obj)
+    {
         switch (get_class($obj)) {
             case 'Blockify\Block':
                 $block =& $obj;
@@ -109,11 +120,10 @@ final class Manager
 
                 // Return contents
                 return $contents;
+            default:
             case 'Blockify\Element':
                 return (string) $obj;
         }
-
-        return false;
     }
 
     public function getResourceData($name, $filename, $type = null)

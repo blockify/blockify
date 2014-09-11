@@ -28,6 +28,7 @@ require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-item.php');
 require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-model-helper.php');
 require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-block.php');
 require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-element.php');
+require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-void-element.php');
 require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-block-package.php');
 require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'internal.php');
 require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-blockify-manager.php');
@@ -36,7 +37,7 @@ require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'class-blockify-manager.php
 $GLOBALS['blockify'] = new \Blockify\Manager;
 
 // Load Blockify extras
-require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'blockify-tasks.php');
+//require(BLOCKIFY_ENGINE_PATH . DIRECTORY_SEPARATOR . 'blockify-tasks.php');
 
 // Temp global funtcions:
 
@@ -63,4 +64,9 @@ function blockify_js()
     if (BLOCKIFY_DEV) {
         echo "<script src=\"" . BLOCKIFY_LIVERELOAD_URL . "\"></script>\n";
     }
+}
+
+function block()
+{
+    trigger_error('block() is no longer used, see Blockify Changelog', E_UESR_ERROR);
 }

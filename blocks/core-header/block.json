@@ -1,0 +1,8 @@
+{
+  "name": "core-header",
+  "description": "",
+  "defaults": {
+    "url": "/",
+    "name": "Website Name"
+  }
+}
