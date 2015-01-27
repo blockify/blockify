@@ -1,0 +1,52 @@
+.block-test {
+  width: 512px;
+  padding: 64px;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+  line-height: 1.42857143;
+  background: #8e44ad;
+}
+
+.block-test h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+  font-style: italic;
+  color: #fff;
+}
+
+.block-test p {
+  margin: 0 0 48px;
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+.block-test a {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.block-test ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.block-test ul li {
+  margin: 4px 0 0;
+  padding: 4px 12px;
+  line-height: 32px;
+  background: #9b59b6;
+  overflow: hidden;
+}
+
+.block-test ul li span {
+  float: right;
+  margin: 0 4px;
+  opacity: 0.9;
+}
+
+.block-test ul li.has-error {
+  background: #c0392b;
+}

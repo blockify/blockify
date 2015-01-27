@@ -4,22 +4,15 @@ namespace Blockify;
 
 final class Manager
 {
-    protected $blockStack;
-    protected $tagStack;
-    public $factory;
+    protected $blockStack = [];
+    private $blockPackages = [];
     public $resources = [
         'css' => [],
         'js'  => []
     ];
 
-    public $schema;
-
     public function __construct()
     {
-        $this->schema = \Blockify\Internal\getEngineDataJSON('schema');
-        $this->blockStack = new \SplStack();
-        $this->tagStack = new \SplStack();
-        $this->factory = new BlockFactory();
         $this->detectResources();
         $this->executeBlockFunctions();
     }
@@ -70,12 +63,14 @@ final class Manager
 
     public function updateGlobals()
     {
-        if ($this->blockStack->count() == 0) {
+        $blockStackSize = sizeof($this->blockStack);
+
+        if ($blockStackSize == 0) {
             unset($GLOBALS['block']);
             return;
         }
 
-        $block = $this->blockStack->top();
+        $block = $this->blockStack[$blockStackSize - 1];
 
         extract(
             array(
@@ -87,20 +82,48 @@ final class Manager
         $GLOBALS['block'] = $block;
     }
 
-    public function currentEval()
+    public function buildBlock($obj)
     {
-        $block = $this->blockStack->top();
+        switch (gettype($obj)) {
+            case 'string':
+                return $obj;
+            case 'object':
+                return $this->buildBlockObject($obj);
+        }
+        return false;
+    }
 
-        // Setup globals + execute current block
-        $this->updateGlobals();
-        require $block->package->getPHP();
+    private function buildBlockObject($obj)
+    {
+        switch (get_class($obj)) {
+            case 'Blockify\Block':
+                $block =& $obj;
 
-        // Pop block from stack and update globals
-        $pop = $this->blockStack->pop();
-        $this->updateGlobals();
+                array_push($this->blockStack, $block);
 
-        // Return the executed block
-        return $pop;
+                // Setup Globals
+                $this->updateGlobals();
+
+                // Start Buffer
+                // TODO: Implement block caching
+                ob_start();
+
+                // Execute Block
+                require $block->package->getPHP();
+
+                // Store buffer contents
+                $contents = ob_get_clean();
+
+                // Cleanup, pop the stack and update globals
+                $pop = array_pop($this->blockStack);
+                $this->updateGlobals();
+
+                // Return contents
+                return $contents;
+            default:
+            case 'Blockify\Element':
+                return (string) $obj;
+        }
     }
 
     public function getResourceData($name, $filename, $type = null)
@@ -131,13 +154,26 @@ final class Manager
         return false;
     }
 
-    public function create($name, $document = null, $options = null, $container = true)
+    public function getPackage($name)
     {
-        $block = $this->factory->build($name, $document, $options, $container);
-        $this->blockStack->push($block);
-        $this->created[] = $block;
-
-        return $block;
+        if (array_key_exists($name, $this->blockPackages)) {
+            return $this->blockPackages[$name];
+        } else {
+            $package = new Package($name);
+            $this->blockPackages[$name] = &$package;
+            return $package;
+        }
     }
 
+    public function getAllPackages()
+    {
+        $packages = [];
+        $blockNames = \Blockify\Internal\getBlocknames();
+        foreach ($blockNames as $name) {
+            if (($package = $this->getPackage($name)) != false) {
+                $packages[] = $package;
+            }
+        }
+        return $packages;
+    }
 }

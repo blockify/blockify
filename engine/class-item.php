@@ -2,7 +2,7 @@
 
 namespace Blockify;
 
-class Item implements \ArrayAccess
+class Item implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     private $data = array();
     private $tagName = null;
@@ -35,6 +35,35 @@ class Item implements \ArrayAccess
     {
         return isset($this->data[$offset]) ? $this->data[$offset] : null;
     }
+
+    public function count()
+    {
+        return count($this->data);
+    }
+
+    public function getIterator() {
+        return new \ArrayIterator($this->data);
+    }
+
+    public function __get($name)
+    {
+        switch($name) {
+            case 'data':
+                return $this->data;
+                break;
+            default:
+                $trace = debug_backtrace();
+                  trigger_error(
+                  'Undefined property via __get(): ' . $name .
+                  ' in ' . $trace[0]['file'] .
+                  ' on line ' . $trace[0]['line'],
+                  E_USER_NOTICE
+                );
+                return null;
+        break;
+    }
+
+  }
 
     // Blockify Functions
 
@@ -85,89 +114,48 @@ class Item implements \ArrayAccess
         return $this->each($keys, $callback);
     }
 
-    public function tag($tagName, $keys, $attributes = null)
+    public function createElement($tagName, $key, $attributes = [])
     {
-        $self = &$this;
-        $callback = function ($itemprop, $content) use ($tagName, $attributes, $self) {
+        if(!isset($this->data[$key]) || empty($this->data[$key])) {
+            return '';
+        }
+        return new \Blockify\Element($tagName, $this->data[$key], $attributes);
+    }
 
-            // Default to empty array if no attributes provided
-            if (is_null($attributes) || !is_array($attributes)) {
-                $attributes = [];
-            }
-            $attributes['itemprop'] = $itemprop;
-            $shortTag = false;
-
-            // Handle specific tags
-            switch (strtolower($tagName)) {
-                case 'img':
-                    if (strpos($content, 'holder.js') !== false) {
-                        $attributes['data-src'] = $content;
-                    } else {
-                        $attributes['src'] = $content;
-                    }
-                    $shortTag = true;
-                    break;
-                case 'a':
-                    $attributes['href'] = $self['url'];
-                    break;
-            }
-
-            $attributes = \Blockify\Internal\stringifyAttributes($attributes);
-
-            if ($shortTag) {
-                echo "<{$tagName}{$attributes}>\n";
-            } else {
-                echo "<{$tagName}{$attributes}>{$content}</{$tagName}>\n";
-            }
-
-        };
-
-        return $this->each($keys, $callback);
+    public function createVoidElement($tagName, $key, $attributes = [])
+    {
+        switch ($tagName) {
+            case 'area':
+            case 'link':
+                $attributes['href'] = $this->data[$key];
+                break;
+            case 'base':
+                $attributes['target'] = $this->data[$key];
+                break;
+            case 'img':
+            case 'embed':
+            case 'source':
+            case 'track':
+                $attributes['src'] = $this->data[$key];
+                break;
+            default:
+                $attributes['data-' . $key] = $this->data[$key];
+                break;
+        }
+        return new \Blockify\VoidElement($tagName, $attributes);
     }
 
     public function attr($attributes = null)
     {
-        // Default to empty array if no attributes provided
-        if (is_null($attributes) || !is_array($attributes)) {
-            $attributes = [];
-        }
-
-        // Setup all required attributes
-        foreach (['class' => [], 'itemscope' => true, 'itemtype' => []] as $attribute => $value) {
-            if (!array_key_exists($attribute, $attributes)) {
-                $attributes[$attribute] = $value;
-            }
-        }
-
-        foreach ($attributes as &$attribute) {
-            if (!is_bool($attribute) && !is_array($attribute)) {
-                $attribute = [$attribute];
-            }
-        }
-
-        // Do we have a specified type?
-        if (!empty($this->data['@type'])) {
-            $itemtype = $this->data['@context'];
-            if ($itemtype == 'http://schema.org' || strpos($itemtype, $this->data['@type']) === false) {
-                $itemtype .= "/{$this->data['@type']}";
-            }
-            $attributes['itemtype'] = $itemtype;
-
-            // Let's also look for a url
-            if (!empty($this->data['url'])) {
-                $attributes['itemid'] = $this->data['url'];
-            }
-        }
-
-        // Do we have a local ID?
-        if (!empty($this->data['@id']) && strpos($this->data['@id'], '#') === 0) {
-            $attributes['id'] = substr($this->data['@id'], 1);
-        }
+        $attributes = array_merge_recursive(
+            (array)$attributes,
+            \Blockify\Internal\extractAttributes($this->data)
+        );
 
         return \Blockify\Internal\stringifyAttributes($attributes);
     }
 
-    public function open($tagName = 'section', $attributes = null)
+    public function open($tagName = 'section', $attributes = array())
     {
         // Get attributes
         $attributes = $this->attr($attributes);

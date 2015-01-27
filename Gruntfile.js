@@ -51,7 +51,8 @@ module.exports = function(grunt) {
     watch: {
       options: {
         livereload: true,
-        cwd: BLOCKS_DIR
+        cwd: BLOCKS_DIR,
+        event: ['changed', 'added', 'deleted']
       },
       livereload: {
         files: '*/{,**/}*.{php,json}'
@@ -108,9 +109,6 @@ module.exports = function(grunt) {
       dest: BLOCKS_DIR + blockDir + 'build/',
       ext: '.coffee.js'
     };
-    //TODO:
-    //  Add specific block rebuilding into watch :) - jmswrnr
-    //  Allow relative resources in block folders other than js/css
   });
 
   grunt.initConfig(config);
