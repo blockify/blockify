@@ -1,9 +1,11 @@
+# Blockify 2.0
+
 Blockify requires stable PHP versions >= 5.3
 
 ---
 
-#Installing
-##Manually
+## Installing
+### Manually
 
 Clone this repo into DocumentRoot/blockify and create an index.php for the test code.
 
@@ -21,7 +23,7 @@ Now you’re able to load Blockify into your PHP project:
 ```
 require 'blockify/load.php';
 ```
-##Alternative Method
+### Alternative Method
 
 During the beta only a manual download is available, but in the future we may add an alternative, i.e. Composer.
 
@@ -36,7 +38,7 @@ Also see: Named Constants
 
 ---
 
-#Test Run
+## Test Run
 Let’s test Blockify by loading the test block with index.php:
 
 ```
@@ -73,7 +75,7 @@ Let’s test Blockify by loading the test block with index.php:
 
 ---
 
-#That’s it!
+## That’s it!
 You’ve loaded Blockify and a test block.
 
 Now dive into the [Using Blocks](http://blockify.co/docs) guide to start the cool stuff.
