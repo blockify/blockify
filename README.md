@@ -20,7 +20,7 @@ DocumentRoot/
 ```
 Now you’re able to load Blockify into your PHP project:
 
-```
+```php
 require 'blockify/load.php';
 ```
 ### Alternative Method
@@ -30,10 +30,9 @@ During the beta only a manual download is available, but in the future we may ad
 Environment
 If the blockify directory cannot be accessed with //127.0.0.1/blockify you need to set the BLOCKIFY_URL constant before loading Blockify:
 
-```
+```php
 define('BLOCKIFY_URL', 'http://blockify.co/blockify');
 require 'blockify/load.php';
-Also see: Named Constants
 ```
 
 ---
@@ -41,7 +40,7 @@ Also see: Named Constants
 ## Test Run
 Let’s test Blockify by loading the test block with index.php:
 
-```
+```php
 <?php require 'blockify/load.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
